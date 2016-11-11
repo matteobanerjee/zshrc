@@ -14,124 +14,76 @@ setopt inc_append_history
 # Ignore duplicate entries
 setopt hist_ignore_all_dups
 
-##########
-# COLORS #
-##########
-# Make working with color escape codes easier
-init_colors() {
-  local prefix=''
-  local suffix=''
-  local shell=zsh
-
-  # Stops zsh from counting escape sequences as characters.
-  # This prevents the PS1 prompt from counting
-  prefix='%{'
-  suffix='%}'
-
-  # Escape sequence for prompts
-  PRESET="$prefix[00m$suffix"
-  PBOLD="$prefix[01m$suffix"
-  PITALIC="$prefix[03m$suffix"
-  PUNDERLINE="$prefix[04m$suffix"
-  PBLINK="$prefix[05m$suffix"
-  PREVERSE="$prefix[07m$suffix"
-  PSTARTLINE=""
-
-  RESET="[00m"
-  BOLD="[01m"
-  ITALIC="[03m"
-  UNDERLINE="[04m"
-  BLINK="[05m"
-  REVERSE="[07m"
+# Path to your oh-my-zsh installation.
+export ZSH=/Users/matteobanerjee/.oh-my-zsh
 
 
-  typeset -Ag FG BG PFG PBG
+# Set name of the theme to load.
+# Look in ~/.oh-my-zsh/themes/
+# Optionally, if you set this to "random", it'll load a random theme each
+# time that oh-my-zsh is loaded.
+ZSH_THEME="my-wezm"
 
+# Uncomment the following line to use case-sensitive completion.
+# CASE_SENSITIVE="true"
 
-  for color in {0..255}; do
-    FG[$color]="[38;5;${color}m"
-    BG[$color]="[48;5;${color}m"
-    PFG[$color]="$prefix[38;5;${color}m$suffix"
-    PBG[$color]="$prefix[48;5;${color}m$suffix"
-  done
+# Uncomment the following line to use hyphen-insensitive completion. Case
+# sensitive completion must be off. _ and - will be interchangeable.
+# HYPHEN_INSENSITIVE="true"
 
-  colors() {
-    for code in {0..255}; do
-      printf "${reset}${FG[$code]}%03s: The quick brown fox jumped over the lazy dog\n" "$code"
-    done
-  }
-  alias colors=colors
-}
+# Uncomment the following line to disable bi-weekly auto-update checks.
+# DISABLE_AUTO_UPDATE="true"
 
-init_colors
+# Uncomment the following line to change how often to auto-update (in days).
+# export UPDATE_ZSH_DAYS=13
 
-#######
-# GIT #
-#######
+# Uncomment the following line to disable colors in ls.
+# DISABLE_LS_COLORS="true"
 
-alias g=git
+# Uncomment the following line to disable auto-setting terminal title.
+# DISABLE_AUTO_TITLE="true"
 
-active_git_branch () {
-  local ref=`git symbolic-ref HEAD 2> /dev/null`
-  echo "${ref#refs/heads/}"
-}
+# Uncomment the following line to enable command auto-correction.
+# ENABLE_CORRECTION="true"
 
-git_branch_ahead () {
-  local branch=`active_git_branch`
-  `git log origin/$branch..HEAD 2> /dev/null | grep '^commit' &> /dev/null` \
-    && echo '➨'
-}
+# Uncomment the following line to display red dots whilst waiting for completion.
+# COMPLETION_WAITING_DOTS="true"
 
-##########
-# PROMPT #
-##########
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
 
-# % escapes expanded in prompts
-setopt prompt_percent
-# Allow $ expansion in prompts
-setopt prompt_subst
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# HIST_STAMPS="mm/dd/yyyy"
 
-# Runs after a command is executed (or interrupted),
-# before the prompt is rendered for the next command.
-precmd() {
-  # Display exit code if non-zero
-  local ret=$?
-  if [ ! $ret -eq 0 ]; then
-    echo -e "\033[0;31m→ exit status: $ret\033[0m" >&2
-  fi
+# Would you like to use another custom folder than $ZSH/custom?
+# ZSH_CUSTOM=/path/to/new-custom-folder
 
-  # Update terminal title bar if one is available
-  if [[ "$TERM" =~ xterm* ]]; then
-    echo -en "\033]0;$USER@$(hostname):$(__prompt_curdir)\007"
-  fi
-}
+# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
+# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+plugins=(git)
 
-# Prompt escape variables differ between shells, so use functions instead
-__prompt_curdir() {
-  local dir="$PWD"
-  echo "${dir/#$HOME/~}"
-}
+# User configuration
 
-# Display the currently git branch and status if we're in a git repository
-__git_prompt() {
-  local branch=`active_git_branch`
-  if [ ! -z "$branch" ]; then
-    echo " `git_branch_ahead`$branch"
-  else
-    echo ""
-  fi
-}
+export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+# export MANPATH="/usr/local/man:$MANPATH"
 
+source $ZSH/oh-my-zsh.sh
 
-# Main prompt line
-PS1="${PSTARTLINE}${PRESET}${PFG[240]}\$USER${PRESET}"
-PS1="${PS1}${PFG[234]}:${PFG[136]}\$(__prompt_curdir)${PRESET}"
-PS1="${PS1}${PFG[64]}\$(__git_prompt)${PRESET}"
-PS1="${PS1}${PFG[33]} ⨠ ${PRESET}"
+# You may need to manually set your language environment
+# export LANG=en_US.UTF-8
 
-# Prompt to display at beginning of next line when command spans multiple lines
-PS2="${PFG[33]}↳${PRESET} "
+# Compilation flags
+export ARCHFLAGS="-arch x86_64"
 
-# Debug line prefix
-PS4="→ `[ "$0" != -bash ] && echo ${FG[64]}$0:${FG[33]}$LINENO || echo` ${RESET}"
+# Set personal aliases, overriding those provided by oh-my-zsh libs,
+# plugins, and themes. Aliases can be placed here, though oh-my-zsh
+# users are encouraged to define aliases within the ZSH_CUSTOM folder.
+# For a full list of active aliases, run `alias`.
 
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
