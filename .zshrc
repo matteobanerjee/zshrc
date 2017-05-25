@@ -18,11 +18,7 @@ setopt hist_ignore_all_dups
 export ZSH=/Users/matteobanerjee/.oh-my-zsh
 
 
-# Set name of the theme to load.
-# Look in ~/.oh-my-zsh/themes/
-# Optionally, if you set this to "random", it'll load a random theme each
-# time that oh-my-zsh is loaded.
-ZSH_THEME="my-wezm"
+ZSH_THEME="simple"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -85,3 +81,7 @@ export ARCHFLAGS="-arch x86_64"
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
+alias copy="xclip -selection clipboard -i"
+
+export GOPATH=~/go
+export PATH=$PATH:$GOPATH/bin
